@@ -6,8 +6,7 @@ const path = require('path');
 
 const TEST_FOLDER = './03-files-in-folder/secret-folder/';
 
-
-async function listFiles() {
+async function filesInFolder() {
   try {
     await readdir(TEST_FOLDER, { withFileTypes: true }, (err, files) => {
       if (err) throw err;
@@ -41,6 +40,6 @@ async function listFiles() {
   }
 }
 
-listFiles();
+filesInFolder();
 
 
