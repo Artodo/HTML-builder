@@ -3,17 +3,17 @@ const fs = require('fs');
 const DESTINATION_FOLDER = './04-copy-directory/files-copy';
 const SOURCE_FOLDER = './04-copy-directory/files';
 
-const copyDirectory = () => {
-  fs.mkdir(DESTINATION_FOLDER, { recursive: true }, err => {
+const copyDirectory = (source, destination) => {
+  fs.mkdir(destination, { recursive: true }, err => {
     if (err) throw err;
     console.log('Папка успешно создана');
 
-    fs.readdir(SOURCE_FOLDER, (err, files) => {
+    fs.readdir(source, (err, files) => {
       if (err) throw err;
       console.log('В папке находятся файлы:' + files);
 
       files.forEach(file => {
-        fs.copyFile(`${SOURCE_FOLDER}/${file}`, `${DESTINATION_FOLDER}/${file}`, err => {
+        fs.copyFile(`${source}/${file}`, `${destination}/${file}`, err => {
           if (err) throw err;
 
         });
@@ -23,4 +23,6 @@ const copyDirectory = () => {
   });
 };
 
-copyDirectory();
+copyDirectory(SOURCE_FOLDER, DESTINATION_FOLDER);
+
+exports.copyDirectory = copyDirectory;
