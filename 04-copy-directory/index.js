@@ -8,16 +8,17 @@ const copyDirectory = (source, destination) => {
     if (err) throw err;
     console.log('Папка успешно создана');
 
-    fs.readdir(source, (err, files) => {
+    fs.readdir(source, { withFileTypes: true }, (err, files) => {
       if (err) throw err;
-      console.log('В папке находятся файлы:' + files);
 
       files.forEach(file => {
-        fs.copyFile(`${source}/${file}`, `${destination}/${file}`, err => {
-          if (err) throw err;
-
-        });
+        if (file.isFile()) {
+          fs.copyFile(`${source}/${file.name}`, `${destination}/${file.name}`, err => {
+            if (err) throw err;
+          });
+        }
       });
+
     });
 
   });
