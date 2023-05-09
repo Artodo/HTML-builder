@@ -1,25 +1,27 @@
 const fs = require('fs');
+const promise = require('fs/promises');
 
 const DESTINATION_FOLDER = './04-copy-directory/files-copy';
 const SOURCE_FOLDER = './04-copy-directory/files';
 
-const copyDirectory = (source, destination) => {
-  fs.mkdir(destination, { recursive: true }, err => {
+const copyDirectory = async (source, destination) => {
+
+  fs.mkdir(destination, { recursive: true }, async err => {
     if (err) throw err;
     console.log('Папка успешно создана');
 
-    fs.readdir(source, { withFileTypes: true }, (err, files) => {
-      if (err) throw err;
+    const destinationFiles = await promise.readdir(destination, 'utf8');
 
-      files.forEach(file => {
-        if (file.isFile()) {
-          fs.copyFile(`${source}/${file.name}`, `${destination}/${file.name}`, err => {
-            if (err) throw err;
-          });
-        }
-      });
+    for (let destinationFile of destinationFiles) {
+      await promise.unlink(destination + "/" + destinationFile);
+    }
 
-    });
+    const sourceFiles = await promise.readdir(source, { withFileTypes: true });
+    for (let sourceFile of sourceFiles) {
+      if (sourceFile.isFile()) {
+        await promise.copyFile(`${source}/${sourceFile.name}`, `${destination}/${sourceFile.name}`);
+      }
+    }
 
   });
 };
